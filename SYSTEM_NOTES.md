@@ -1,4 +1,5 @@
 # System Notes
+A sketch of what might be needed to meet the needs outlined in the problem statement. This includes components, questions, and potential technology list.
 
 ## Problem Statement
 Any time a doctor accepts things like lunches, gifts, etc. that cost greater than $10 dollars this has to be reported. Below is the site that contains all the data. There is an API or you can download the data. Either method to get the data is fine:
@@ -55,3 +56,5 @@ A service that provides search functionality - Elasticsearch
 Something comfortable with excellent library support - Python / FastAPI 
 ### Frontend
 Something I have used at least a little bit - React
+### Glue
+There are 4 distinct components of this system so there needs to be some way to glue them all together and ease the task of managing it all - Containers and Docker Compose
