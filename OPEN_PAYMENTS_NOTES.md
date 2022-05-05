@@ -52,3 +52,15 @@ Note the years 2014 and 2015 have separate appendicies as their model is slightl
 
 How many Previous Program Years should be included in the dataset?
 
+    Focus specifically on 2015 General Payment Data.
+    The dataset id for this is: e657f6f0-7abb-5e82-8b42-23bff09f0763
+    The metadata for this dataset can be retrieved with the following https request:
+        https://openpaymentsdata.cms.gov/api/1/metastore/schemas/dataset/items/e657f6f0-7abb-5e82-8b42-23bff09f0763
+    The model includes necessary information to determine
+        1) Where to download data: .distribution[].data.downloadURL
+        2) When the data was last updated: .modified
+    This dataset is massive (11 million records, and 5.9G raw csv size). To avoid excessively long download times the data should be streamed and processed in smaller batches. 
+    
+## Data Scale
+Given the scale of the data, we need to figure out if the system can handle that many records. Performance of database, search, and backend could all suffer if we just throw all the data at it without slicing it up to deduplicate things like physician names and addresses as well as the manufacturer/GPO information
+
