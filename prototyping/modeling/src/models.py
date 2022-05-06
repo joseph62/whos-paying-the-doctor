@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 @dataclass
-class ChungusGeneralPayment:
+class ReferenceGeneralPayment:
     record_id: int
     change_type: str
     covered_recipient_type: str
