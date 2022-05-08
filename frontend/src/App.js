@@ -1,5 +1,5 @@
 import './App.css';
-import { Container, Box, FormGroup, Button, Autocomplete, TextField, Grid, ButtonGroup, List, ListItem, ListItemText, Stack, Link } from '@mui/material'
+import { Container, Box, FormGroup, Button, Autocomplete, TextField, Grid, ButtonGroup, List, ListItem, ListItemText, Stack, Link, DialogTitle } from '@mui/material'
 import { useState } from 'react';
 
 function searchParams(terms) {
@@ -39,6 +39,7 @@ export default function App() {
   return (
     <Container maxWidth="lg">
       <Box sx={{ my: 8 }}>
+        <DialogTitle>Open Payments: 2015 General Payments Search Tool</DialogTitle>
         <Stack>
           <FormGroup>
             <Grid container spacing={2}>
