@@ -1,9 +1,10 @@
 import requests
 import psycopg
-from psycopg import sql
 import csv
 import itertools
 import timeit
+import threading
+from elasticsearch import Elasticsearch, helpers
 
 DB_HOST = "localhost"
 DB_PORT = 5432
@@ -19,14 +20,13 @@ S_INDEX = "general-payments"
 
 
 def generate_search_connection():
-    return None
+    return Elasticsearch(f"http://{S_HOST}:{S_PORT}", basic_auth=(S_USER, S_PASS))
 
 
 def generate_db_connection():
     conn = psycopg.connect(
         dbname=DB, host=DB_HOST, port=DB_PORT, user=DB_USER, password=DB_PASS
     )
-    conn.autocommit = True
     return conn
 
 
@@ -105,24 +105,39 @@ def get_dataset_stream(dataset_id):
     keys = next(response_lines)
     return (keys, response_lines)
 
-
-def copy_csv_to_db(copy, rows):
+def generate_es_index_for_rows(keys, rows):
+    id_index = keys.index("Record_ID")
     for row in rows:
-        copy.write_row(row)
+        yield {
+            "_index": S_INDEX,
+            "Record_ID": row[id_index],
+            "all": " ".join(itertools.chain(row[:id_index], row[id_index:]))
+        }
 
+def copy_csv_to_db(keys, es, db_cursor, copy_statement, rows):
+    db_rows, es_rows = itertools.tee(rows)
+    print("Copying to db")
+    with db_cursor.copy(copy_statement) as copy:
+        for row in db_rows:
+            copy.write_row(row)
+    print("Done copying to db, copying to es")
+    for rows_chunk in grouper(1000, es_rows):
+        helpers.bulk(es, generate_es_index_for_rows(keys, (row for row in rows_chunk if row)))
+    print("Done copying to es")
+
+def grouper(n, iterable):
+    args = [iter(iterable)] * n
+    return itertools.zip_longest(*args)
 
 def main(dataset_id):
     db_conn = generate_db_connection()
-    print("Connected to db")
-    cursor = db_conn.cursor()
-    keys, value_lines = get_dataset_stream(dataset_id)
+    es_conn = generate_search_connection()
+    print("Connected to db and es")
+    keys, rows = get_dataset_stream(dataset_id)
     print("Got value stream", keys)
     copy_statement = db_copy_statement(keys)
     print(f"Made copy statement: '{copy_statement}'")
-    print("Starting copy")
-    with cursor.copy(copy_statement) as copy:
-        print(timeit.timeit(lambda: copy_csv_to_db(copy, value_lines)))
-    print("Copy done")
+    print(timeit.timeit(lambda: copy_csv_to_db(keys, es_conn, db_conn.cursor(), copy_statement, rows)))
 
 
 if __name__ == "__main__":
