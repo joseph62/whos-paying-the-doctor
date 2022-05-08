@@ -27,10 +27,14 @@ services:
   frontend:
     image: payments-frontend
     build: ./frontend
+    volumes:
+      - './frontend:/app'
     ports:
       - 3000:3000
   backend:
     image: payments-backend
     build: ./backend
+    volumes:
+      - './backend/src:/app'
     ports:
       - 8000:8000

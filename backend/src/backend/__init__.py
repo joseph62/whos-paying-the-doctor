@@ -1,6 +1,6 @@
 import logging
 import os
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 
 DB_NAME = os.environ.get("DB_NAME", "payments")
 DB_HOST = os.environ.get("DB_HOST", "db")
@@ -29,21 +29,21 @@ app = FastAPI()
 
 
 @app.get("/suggestions")
-async def search_suggestions(terms: str):
-    return [
-        "suggestion 1",
-        "suggestion 2",
-        "suggestion 3",
-    ]
-
+async def search_suggestions(response: Response, terms: str):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return list(f"{terms} {i}" for i in range(5))
 
 @app.get("/search-results")
-async def search(terms: str):
-    return [{"Record_ID": 1, "Physician_First_Name": "Joe"}]
+async def search(response: Response, terms: str):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return [{"Record_ID": i, "all": f"{terms} {i}"} for i in range(500)]
 
 
-@app.get("/search-results/file")
-async def export_search(terms: str):
+@app.get("/search-results/xls")
+async def export_search(response: Response, terms: str):
+    file_name_suffix = terms.replace(" ", "_").replace('"', "")[:50]
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Content-Disposition'] = f'attachement; filename="2015GP_{file_name_suffix}.xls"'
     return """
     This is a very cool XLS file
     """
