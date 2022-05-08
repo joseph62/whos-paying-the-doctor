@@ -24,3 +24,8 @@ services:
       - ELASTIC_PASSWORD=payments
       - xpack.security.enabled=true
       - xpack.security.enrollment.enabled=true
+  frontend:
+    image: payments-frontend
+    build: ./frontend
+    ports:
+      - 3000:3000
