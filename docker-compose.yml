@@ -1,19 +1,5 @@
 version: "3.9"
 services:
-  db:
-    image: postgres
-    volumes:
-      # - "./.persistent-storage/database:/var/lib/postgresql/data"
-      - "./database/src/sql:/docker-entrypoint-initdb.d"
-    environment:
-      - POSTGRES_USER=payments
-      - POSTGRES_PASSWORD=payments
-    ports:
-      - 5432:5432
-  adminer:
-    image: adminer
-    ports:
-      - 8080:8080
   search:
     image: elasticsearch:8.2.0
     ports:

@@ -3,7 +3,7 @@ import { Container, Box, FormGroup, Button, Autocomplete, TextField, Grid, Butto
 import { useState } from 'react';
 
 function searchParams(terms) {
-  return "?" + new URLSearchParams({terms: terms})
+  return "?" + new URLSearchParams({ terms: terms })
 }
 
 function suggestionUrl(terms) {
@@ -43,43 +43,44 @@ export default function App() {
         <Stack>
           <FormGroup>
             <Grid container spacing={2}>
-              <Grid item xs={8}>
-              <Autocomplete 
-                id="search-bar"
-                options={options}
-                renderInput={(params) => <TextField {...params} 
-                  label="No search terms yet..."
-                  onChange={ev => {
-                    setTerms(ev.target.value)
-                    if (ev.target.value !== "" || ev.target.value !== null) {
-                      onChangeFindOptions(ev.target.value);
-                      setExportUrl(exportSearchResultsUrl(ev.target.value))
-                    }
-                  }}
+              <Grid item xs={10}>
+                <Autocomplete
+                  id="search-bar"
+                  filterOptions={(options, _) => options}
+                  options={options}
+                  renderInput={(params) => <TextField {...params}
+                    label="No search terms yet..."
+                    onChange={ev => {
+                      setTerms(ev.target.value)
+                      if (ev.target.value !== "" || ev.target.value !== null) {
+                        onChangeFindOptions(ev.target.value);
+                        setExportUrl(exportSearchResultsUrl(ev.target.value))
+                      }
+                    }}
                   />}
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={2}>
                 <ButtonGroup>
                   <Button id="search-button" onClick={ev => {
-                          onSearchClickDoSearch(terms)
-                        }} 
-                        variant="contained">
-                      Search
-                    </Button>
+                    onSearchClickDoSearch(terms)
+                  }}
+                    variant="contained">
+                    Search
+                  </Button>
                   <Button id="export-search-results" href={exportUrl} target="_blank">Export</Button>
                 </ButtonGroup>
               </Grid>
             </Grid>
           </FormGroup>
           <List>
-                  {searchResults.map(result => {
-                    return (
-                      <ListItem>
-                        <ListItemText>{result.all}</ListItemText>
-                      </ListItem>
-                    )
-                  })}
+            {searchResults.map(result => {
+              return (
+                <ListItem>
+                  <ListItemText>{result._all}</ListItemText>
+                </ListItem>
+              )
+            })}
           </List>
         </Stack>
       </Box>
