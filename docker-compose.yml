@@ -31,10 +31,15 @@ services:
       - './frontend:/app'
     ports:
       - 3000:3000
+    depends_on:
+      - backend
   backend:
     image: payments-backend
     build: ./backend
     volumes:
       - './backend/src:/app'
+    depends_on:
+      - db
+      - search
     ports:
       - 8000:8000
