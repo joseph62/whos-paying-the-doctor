@@ -2,13 +2,7 @@ from .connections import ES_INDEX
 
 
 def make_query(terms):
-    return {
-        "multi_match": {
-            "query": terms,
-            "type": "bool_prefix",
-            "fields": ["_all", "_all._2gram", "_all._3gram"],
-        }
-    }
+    return { "multi_match": { "query": terms, "type": "bool_prefix", "fields": ["_all", "_all._2gram", "_all._3gram"], } }
 
 
 def get_search_suggestions(es_conn, terms):

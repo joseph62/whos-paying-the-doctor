@@ -58,3 +58,14 @@ Something comfortable with excellent library support - Python / FastAPI
 Something I have used at least a little bit - React
 ### Glue
 There are 4 distinct components of this system so there needs to be some way to glue them all together and ease the task of managing it all - Containers and Docker Compose
+
+## Technologies at the end
+I found that Elasticsearch was able to easily house the full data for excel export as well as provide search results so I removed any sql database usage. 
+### Search & Database
+Elasticsearch
+### Backend
+Python / FastAPI
+### Frontend
+React / MaterialUI
+### Glue
+Docker / Docker Compose

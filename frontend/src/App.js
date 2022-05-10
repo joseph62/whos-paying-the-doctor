@@ -77,7 +77,7 @@ export default function App() {
             {searchResults.map(result => {
               return (
                 <ListItem>
-                  <ListItemText>{result._all}</ListItemText>
+                  <ListItemText key={result.Record_ID}>{result._all}</ListItemText>
                 </ListItem>
               )
             })}

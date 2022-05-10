@@ -3,29 +3,32 @@ services:
   search:
     image: elasticsearch:8.2.0
     ports:
-      - 9300:9300
       - 9200:9200
     environment:
       - discovery.type=single-node
       - ELASTIC_PASSWORD=payments
       - xpack.security.enabled=true
       - xpack.security.enrollment.enabled=true
+    networks:
+      - payments
   frontend:
     image: payments-frontend
     build: ./frontend
-    volumes:
-      - './frontend:/app'
     ports:
       - 3000:3000
     depends_on:
       - backend
+    networks:
+      - payments
   backend:
     image: payments-backend
     build: ./backend
-    volumes:
-      - './backend/src:/app'
     depends_on:
-      - db
       - search
     ports:
       - 8000:8000
+    networks:
+      - payments
+networks:
+  payments:
+    name: payments
